@@ -46,7 +46,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.10
-Release:   5%{?gitdate:.%{gitdate}}%{?dist}
+Release:   6%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -512,6 +512,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Fri Apr 16 2021 Mohan Boddu <mboddu@redhat.com> - 1.20.10-6
+- Rebuilt for RHEL 9 BETA on Apr 15th 2021. Related: rhbz#1947937
+
 * Wed Feb 03 2021 Peter Hutterer <peter.hutterer@redhat.com> 1.20.10-5
 - Drop BuildRequires for flex-devel (#1871101)
 
