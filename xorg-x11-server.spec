@@ -45,8 +45,8 @@
 
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
-Version:   1.20.10
-Release:   6%{?gitdate:.%{gitdate}}%{?dist}
+Version:   1.20.11
+Release:   1%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -512,6 +512,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Thu Jun 17 2021 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-1
+- xserver 1.20.11 (#1952895)
+
 * Fri Apr 16 2021 Mohan Boddu <mboddu@redhat.com> - 1.20.10-6
 - Rebuilt for RHEL 9 BETA on Apr 15th 2021. Related: rhbz#1947937
 
