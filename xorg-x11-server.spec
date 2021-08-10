@@ -46,7 +46,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   2%{?gitdate:.%{gitdate}}%{?dist}
+Release:   3%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -512,6 +512,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Aug 10 2021 Mohan Boddu <mboddu@redhat.com> - 1.20.11-3
+- Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
+  Related: rhbz#1991688
+
 * Tue Jun 22 2021 Mohan Boddu <mboddu@redhat.com> - 1.20.11-2
 - Rebuilt for RHEL 9 BETA for openssl 3.0
   Related: rhbz#1971065
