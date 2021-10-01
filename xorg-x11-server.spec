@@ -46,7 +46,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   4%{?gitdate:.%{gitdate}}%{?dist}
+Release:   5%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -94,6 +94,10 @@ Patch6: 0001-Fedora-hack-Make-the-suid-root-wrapper-always-start-.patch
 
 # https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/761
 Patch7: 0001-xkb-Drop-check-for-XkbSetMapResizeTypes.patch
+
+# 1988922 - [Hyper-V]Installation failed with: 'x or window manager startup failed' when the VM was created with GEN1
+
+Patch8: 0001-mustard-xfree86-Only-call-the-driver-s-platformProbe.patch
 
 # Backports from current stable "server-1.20-branch":
 # <empty>
@@ -515,6 +519,11 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Nov  9 2021 Adam Jackson <ajax@redhat.com> - 1.20.11-5
+- Disable non-platform video driver probe, it should never be needed and the
+  PCI probe code interferes with the (default) platform path.
+  Resolves: #2000921
+
 * Tue Oct 26 2021 Ray Strode <rstrode@redhat.com> - 1.20.11-4
 - Fix XkbChangeMap
   Resolves: #2009928
