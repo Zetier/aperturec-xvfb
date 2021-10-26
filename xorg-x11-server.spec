@@ -46,7 +46,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   3%{?gitdate:.%{gitdate}}%{?dist}
+Release:   4%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -91,6 +91,9 @@ Patch5: 0001-autobind-GPUs-to-the-screen.patch
 
 # because the display-managers are not ready yet, do not upstream
 Patch6: 0001-Fedora-hack-Make-the-suid-root-wrapper-always-start-.patch
+
+# https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/761
+Patch7: 0001-xkb-Drop-check-for-XkbSetMapResizeTypes.patch
 
 # Backports from current stable "server-1.20-branch":
 # <empty>
@@ -512,6 +515,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Oct 26 2021 Ray Strode <rstrode@redhat.com> - 1.20.11-4
+- Fix XkbChangeMap
+  Resolves: #2009928
+
 * Tue Aug 10 2021 Mohan Boddu <mboddu@redhat.com> - 1.20.11-3
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688
