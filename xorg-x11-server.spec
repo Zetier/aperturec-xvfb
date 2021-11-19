@@ -8,10 +8,6 @@
 # format, and add a PatchN: line.  If you want to push something upstream,
 # check out the master branch, pull, cherry-pick, and push.
 
-# X.org requires lazy relocations to work.
-%undefine _hardened_build
-%undefine _strict_symbol_defs_build
-
 #global gitdate 20161026
 %global stable_abi 1
 
@@ -46,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   5%{?gitdate:.%{gitdate}}%{?dist}
+Release:   6%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -103,7 +99,17 @@ Patch8: 0001-mustard-xfree86-Only-call-the-driver-s-platformProbe.patch
 # <empty>
 
 # Backports from "master" upstream:
-# <empty>
+Patch102: 0002-xfree86-Link-fb-statically.patch
+Patch104: 0004-loader-Move-LoaderSymbolFromModule-to-public-API.patch
+Patch105: 0005-loader-Make-LoaderSymbolFromModule-take-a-ModuleDesc.patch
+Patch106: 0006-modesetting-Indirect-the-shadow-API-through-LoaderSy.patch
+Patch107: 0007-modesetting-Indirect-the-glamor-API-through-LoaderSy.patch
+Patch108: 0008-modesetting-Add-glamor_finish-convenience-macro.patch
+Patch109: 0009-modesetting-Use-EGL_MESA_query_driver-to-select-DRI-.patch
+Patch110: 0010-modesetting-Fix-build-with-glamor-disabled.patch
+# Because we still use automake
+Patch111: 0011-modesetting-set-gbm-as-dependency-for-autotools.patch
+
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -320,10 +326,6 @@ test `getminor extension` == %{extension_minor}
 
 %build
 
-export CFLAGS="$RPM_OPT_FLAGS -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1"
-export CXXFLAGS="$RPM_OPT_FLAGS -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1"
-export LDFLAGS="$RPM_LD_FLAGS -specs=/usr/lib/rpm/redhat/redhat-hardened-ld"
-
 %if !0%{?rhel}
 %ifarch %{ix86} x86_64
 %global int10_arch 1
@@ -450,7 +452,6 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 %dir %{_libdir}/xorg/modules/input
 %{_libdir}/xorg/modules/libfbdevhw.so
 %{_libdir}/xorg/modules/libexa.so
-%{_libdir}/xorg/modules/libfb.so
 %{_libdir}/xorg/modules/libglamoregl.so
 %{_libdir}/xorg/modules/libshadow.so
 %{_libdir}/xorg/modules/libshadowfb.so
@@ -519,6 +520,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Nov 23 2021 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-6
+- Restore hardened builds
+  Resolves: #2024556
+
 * Tue Nov  9 2021 Adam Jackson <ajax@redhat.com> - 1.20.11-5
 - Disable non-platform video driver probe, it should never be needed and the
   PCI probe code interferes with the (default) platform path.
