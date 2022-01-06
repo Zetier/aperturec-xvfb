@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   6%{?gitdate:.%{gitdate}}%{?dist}
+Release:   7%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -109,6 +109,15 @@ Patch109: 0009-modesetting-Use-EGL_MESA_query_driver-to-select-DRI-.patch
 Patch110: 0010-modesetting-Fix-build-with-glamor-disabled.patch
 # Because we still use automake
 Patch111: 0011-modesetting-set-gbm-as-dependency-for-autotools.patch
+
+# CVE-2021-4011
+Patch10009: 0001-record-Fix-out-of-bounds-access-in-SwapCreateRegiste.patch
+# CVE-2021-4009
+Patch10010: 0002-xfixes-Fix-out-of-bounds-access-in-ProcXFixesCreateP.patch
+# CVE-2021-4010
+Patch10011: 0003-Xext-Fix-out-of-bounds-access-in-SProcScreenSaverSus.patch
+# CVE-2021-4008
+Patch10012: 0004-render-Fix-out-of-bounds-access-in-SProcRenderCompos.patch
 
 
 BuildRequires: make
@@ -520,6 +529,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Thu Jan  6 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-7
+- CVE fix for: CVE-2021-4008 (#2030160), CVE-2021-4009 (#2030170),
+  CVE-2021-4010 (#2030174), CVE-2021-4011 (#2030179)
+
 * Tue Nov 23 2021 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-6
 - Restore hardened builds
   Resolves: #2024556
