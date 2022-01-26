@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   7%{?gitdate:.%{gitdate}}%{?dist}
+Release:   8%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -92,8 +92,8 @@ Patch6: 0001-Fedora-hack-Make-the-suid-root-wrapper-always-start-.patch
 Patch7: 0001-xkb-Drop-check-for-XkbSetMapResizeTypes.patch
 
 # 1988922 - [Hyper-V]Installation failed with: 'x or window manager startup failed' when the VM was created with GEN1
-
-Patch8: 0001-mustard-xfree86-Only-call-the-driver-s-platformProbe.patch
+# 2029769 - fbdev Xorg driver no longer works as a fallback with unsupported hardware
+Patch8: 0001-mustard-xfree86-Disable-the-PCI-probe-path.patch
 
 # Backports from current stable "server-1.20-branch":
 # <empty>
@@ -529,6 +529,11 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Wed Jan 26 2022 Adam Jackson <ajax@redhat.com> - 1.20.11-8
+- Only disable the PCI-specific driver probe, since we do still want fallback
+  to fbdev to work.
+  Resolves: #2029769
+
 * Thu Jan  6 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-7
 - CVE fix for: CVE-2021-4008 (#2030160), CVE-2021-4009 (#2030170),
   CVE-2021-4010 (#2030174), CVE-2021-4011 (#2030179)
