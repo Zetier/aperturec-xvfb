@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   8%{?gitdate:.%{gitdate}}%{?dist}
+Release:   9%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -109,6 +109,9 @@ Patch109: 0009-modesetting-Use-EGL_MESA_query_driver-to-select-DRI-.patch
 Patch110: 0010-modesetting-Fix-build-with-glamor-disabled.patch
 # Because we still use automake
 Patch111: 0011-modesetting-set-gbm-as-dependency-for-autotools.patch
+# Xorg crashes with NVIDIA proprietary driver when uisng Present
+# https://bugzilla.redhat.com/show_bug.cgi?id=2046330
+Patch112: 0001-present-Check-for-NULL-to-prevent-crash.patch
 
 # CVE-2021-4011
 Patch10009: 0001-record-Fix-out-of-bounds-access-in-SwapCreateRegiste.patch
@@ -529,6 +532,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Fri Jan 28 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-9
+- Fix crash with NVIDIA proprietary driver with Present (#2046330)
+
 * Wed Jan 26 2022 Adam Jackson <ajax@redhat.com> - 1.20.11-8
 - Only disable the PCI-specific driver probe, since we do still want fallback
   to fbdev to work.
