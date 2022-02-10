@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   9%{?gitdate:.%{gitdate}}%{?dist}
+Release:   10%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -112,6 +112,9 @@ Patch111: 0011-modesetting-set-gbm-as-dependency-for-autotools.patch
 # Xorg crashes with NVIDIA proprietary driver when uisng Present
 # https://bugzilla.redhat.com/show_bug.cgi?id=2046330
 Patch112: 0001-present-Check-for-NULL-to-prevent-crash.patch
+# Fix a regression with hybrid gfx and NVIDIA proprietary driver
+# https://bugzilla.redhat.com/show_bug.cgi?id=2052605
+Patch113: 0001-modesetting-Fix-msSharePixmapBacking-Segfault-Regres.patch
 
 # CVE-2021-4011
 Patch10009: 0001-record-Fix-out-of-bounds-access-in-SwapCreateRegiste.patch
@@ -532,6 +535,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Thu Feb 10 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-10
+- Fix a regression with hybrid gfx and NVIDIA proprietary driver (#2052605)
+
 * Fri Jan 28 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-9
 - Fix crash with NVIDIA proprietary driver with Present (#2046330)
 
