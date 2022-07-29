@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   10%{?gitdate:.%{gitdate}}%{?dist}
+Release:   11%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -124,7 +124,10 @@ Patch10010: 0002-xfixes-Fix-out-of-bounds-access-in-ProcXFixesCreateP.patch
 Patch10011: 0003-Xext-Fix-out-of-bounds-access-in-SProcScreenSaverSus.patch
 # CVE-2021-4008
 Patch10012: 0004-render-Fix-out-of-bounds-access-in-SProcRenderCompos.patch
-
+# CVE-2022-2319/ZDI-CAN-16062, CVE-2022-2320/ZDI-CAN-16070
+Patch10013: 0001-xkb-switch-to-array-index-loops-to-moving-pointers.patch
+Patch10014: 0002-xkb-swap-XkbSetDeviceInfo-and-XkbSetDeviceInfoCheck.patch
+Patch10015: 0003-xkb-add-request-length-validation-for-XkbSetGeometry.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -535,6 +538,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Fri Jul 29 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-11
+- CVE fix for: CVE-2022-2319/ZDI-CAN-16062, CVE-2022-2320/ZDI-CAN-16070
+  Resolves: rhbz#2108157, rhbz#2108162
+
 * Thu Feb 10 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-10
 - Fix a regression with hybrid gfx and NVIDIA proprietary driver (#2052605)
 
