@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   11%{?gitdate:.%{gitdate}}%{?dist}
+Release:   12%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -128,6 +128,10 @@ Patch10012: 0004-render-Fix-out-of-bounds-access-in-SProcRenderCompos.patch
 Patch10013: 0001-xkb-switch-to-array-index-loops-to-moving-pointers.patch
 Patch10014: 0002-xkb-swap-XkbSetDeviceInfo-and-XkbSetDeviceInfoCheck.patch
 Patch10015: 0003-xkb-add-request-length-validation-for-XkbSetGeometry.patch
+# CVE-2022-3550
+Patch10016: 0001-xkb-proof-GetCountedString-against-request-length-at.patch
+# CVE-2022-3551
+Patch10017: 0001-xkb-fix-some-possible-memleaks-in-XkbGetKbdByName.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -538,6 +542,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Mon Nov 14 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-12
+- Fix CVE-2022-3550, CVE-2022-3551
+  Resolves: rhbz#2140768, rhbz#2140773
+
 * Fri Jul 29 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-11
 - CVE fix for: CVE-2022-2319/ZDI-CAN-16062, CVE-2022-2320/ZDI-CAN-16070
   Resolves: rhbz#2108157, rhbz#2108162
