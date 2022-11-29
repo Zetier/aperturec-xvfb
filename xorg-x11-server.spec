@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   12%{?gitdate:.%{gitdate}}%{?dist}
+Release:   13%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -95,6 +95,10 @@ Patch7: 0001-xkb-Drop-check-for-XkbSetMapResizeTypes.patch
 # 2029769 - fbdev Xorg driver no longer works as a fallback with unsupported hardware
 Patch8: 0001-mustard-xfree86-Disable-the-PCI-probe-path.patch
 
+# 2148292 - Drop dependency on xorg-x11-font-utils
+# Upstream MR #1001 but that one is meson only
+Patch9: 0001-configure.ac-search-for-the-fontrootdir-ourselves.patch
+
 # Backports from current stable "server-1.20-branch":
 # <empty>
 
@@ -140,7 +144,6 @@ BuildRequires: automake autoconf libtool pkgconfig
 BuildRequires: xorg-x11-util-macros >= 1.17
 
 BuildRequires: xorg-x11-proto-devel >= 7.7-10
-BuildRequires: xorg-x11-font-utils >= 7.2-11
 
 BuildRequires: dbus-devel libepoxy-devel systemd-devel
 BuildRequires: xorg-x11-xtrans-devel >= 1.3.2
@@ -542,6 +545,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Nov 29 2022 Peter Hutterer <peter.hutterer@redhat.com> - 1.20.11-13
+- Drop dependency on xorg-x11-font-utils, it was only there for one pkgconfig
+  query for a variable that never changes value (#2148292)
+
 * Mon Nov 14 2022 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-12
 - Fix CVE-2022-3550, CVE-2022-3551
   Resolves: rhbz#2140768, rhbz#2140773
