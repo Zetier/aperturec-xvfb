@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   14%{?gitdate:.%{gitdate}}%{?dist}
+Release:   15%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -150,6 +150,8 @@ Patch10022: 0005-Xext-free-the-screen-saver-resource-when-replacing-i.patch
 Patch10023: 0006-Xext-free-the-XvRTVideoNotify-when-turning-off-from-.patch
 # CVE-2022-46283
 Patch10024: 0007-xkb-reset-the-radio_groups-pointer-to-NULL-after-fre.patch
+# Follow-up to CVE-2022-46340
+Patch10025: 0008-Xext-fix-invalid-event-type-mask-in-XTestSwapFakeInp.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -559,6 +561,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Mon Dec 19 2022 Peter Hutterer <peter.hutterer@redhat.com> - 1.20.11-15
+- Follow-up fix for CVE-2022-46340 (#2151776)
+
 * Wed Dec 14 2022 Peter Hutterer <peter.hutterer@redhat.com> - 1.20.11-14
 - CVE fix for: CVE-2022-4283 (#2151801), CVE-2022-46340 (#2151776),
   CVE-2022-46341 (#2151781), CVE-2022-46342 (#2151788),
