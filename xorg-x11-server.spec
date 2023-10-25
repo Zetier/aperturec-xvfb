@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   20%{?gitdate:.%{gitdate}}%{?dist}
+Release:   21%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -159,6 +159,8 @@ Patch10026: 0001-Xi-fix-potential-use-after-free-in-DeepCopyPointerCl.patch
 Patch10027: 0001-composite-Fix-use-after-free-of-the-COW.patch
 # CVE-2023-5367
 Patch10028: 0001-Xi-randr-fix-handling-of-PropModeAppend-Prepend.patch
+# CVE-2023-5380
+Patch10029: 0002-mi-reset-the-PointerWindows-reference-on-screen-swit.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -568,6 +570,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Wed Oct 25 2023 José Expósito <jexposit@redhat.com> - 1.20.11-20
+- CVE fix for: CVE-2023-5380
+  Resolves: https://issues.redhat.com/browse/RHEL-14062
+
 * Wed Oct 25 2023 José Expósito <jexposit@redhat.com> - 1.20.11-20
 - CVE fix for: CVE-2023-5367
   Resolves: https://issues.redhat.com/browse/RHEL-13430
