@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   23%{?gitdate:.%{gitdate}}%{?dist}
+Release:   24%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -182,6 +182,8 @@ Patch10039: 0008-glx-Call-XACE-hooks-on-the-GLX-buffer.patch
 Patch10040: 0009-ephyr-xwayland-Use-the-proper-private-key-for-cursor.patch
 # Fix compilation error
 Patch10041: 0001-hw-Rename-boolean-config-value-field-from-bool-to-bo.patch
+# Related to CVE-2024-21886
+Patch10042: 0001-dix-Fix-use-after-free-in-input-device-shutdown.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -591,6 +593,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Thu Jan 18 2024 José Expósito <jexposit@redhat.com> - 1.20.4-24
+- Fix use after free related to CVE-2024-21886
+
 * Tue Jan 16 2024 José Expósito <jexposit@redhat.com> - 1.20.11-23
 - CVE fix for: CVE-2023-6816, CVE-2024-0229, CVE-2024-21885, CVE-2024-21886,
   CVE-2024-0408 and CVE-2024-0409
