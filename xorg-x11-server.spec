@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   24%{?gitdate:.%{gitdate}}%{?dist}
+Release:   25%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -184,6 +184,18 @@ Patch10040: 0009-ephyr-xwayland-Use-the-proper-private-key-for-cursor.patch
 Patch10041: 0001-hw-Rename-boolean-config-value-field-from-bool-to-bo.patch
 # Related to CVE-2024-21886
 Patch10042: 0001-dix-Fix-use-after-free-in-input-device-shutdown.patch
+# Fix compilation error on i686
+Patch10043: 0001-ephyr-Fix-incompatible-pointer-type-build-error.patch
+# Fix copy and paste error in CVE-2024-0229
+Patch1025: 0001-dix-fix-valuator-copy-paste-error-in-the-DeviceState.patch
+# CVE-2024-31080
+Patch1026: 0001-Xi-ProcXIGetSelectedEvents-needs-to-use-unswapped-le.patch
+# CVE-2024-31081
+Patch1027: 0002-Xi-ProcXIPassiveGrabDevice-needs-to-use-unswapped-le.patch
+# CVE-2024-31082
+Patch1028: 0003-Xquartz-ProcAppleDRICreatePixmap-needs-to-use-unswap.patch
+# CVE-2024-31083
+Patch1029: 0004-render-fix-refcounting-of-glyphs-during-ProcRenderAd.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -314,6 +326,7 @@ License: MIT and GPLv2
 Requires: xorg-x11-server-common >= %{version}-%{release}
 # required for xvfb-run
 Requires: xorg-x11-xauth
+Requires: util-linux
 Provides: Xvfb
 
 %description Xvfb
@@ -593,6 +606,12 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Thu Apr 04 2024 José Expósito <jexposit@redhat.com> - 1.20.4-25
+- CVE fix for: CVE-2024-31080, CVE-2024-31081, CVE-2024-31082 and
+  CVE-2024-31083
+- Add util-linux as a dependency of Xvfb
+- Fix compilation error on i686
+
 * Thu Jan 18 2024 José Expósito <jexposit@redhat.com> - 1.20.4-24
 - Fix use after free related to CVE-2024-21886
 
