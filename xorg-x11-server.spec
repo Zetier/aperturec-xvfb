@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   25%{?gitdate:.%{gitdate}}%{?dist}
+Release:   26%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -187,15 +187,16 @@ Patch10042: 0001-dix-Fix-use-after-free-in-input-device-shutdown.patch
 # Fix compilation error on i686
 Patch10043: 0001-ephyr-Fix-incompatible-pointer-type-build-error.patch
 # Fix copy and paste error in CVE-2024-0229
-Patch1025: 0001-dix-fix-valuator-copy-paste-error-in-the-DeviceState.patch
+Patch10044: 0001-dix-fix-valuator-copy-paste-error-in-the-DeviceState.patch
 # CVE-2024-31080
-Patch1026: 0001-Xi-ProcXIGetSelectedEvents-needs-to-use-unswapped-le.patch
+Patch10045: 0001-Xi-ProcXIGetSelectedEvents-needs-to-use-unswapped-le.patch
 # CVE-2024-31081
-Patch1027: 0002-Xi-ProcXIPassiveGrabDevice-needs-to-use-unswapped-le.patch
+Patch10046: 0002-Xi-ProcXIPassiveGrabDevice-needs-to-use-unswapped-le.patch
 # CVE-2024-31082
-Patch1028: 0003-Xquartz-ProcAppleDRICreatePixmap-needs-to-use-unswap.patch
+Patch10047: 0003-Xquartz-ProcAppleDRICreatePixmap-needs-to-use-unswap.patch
 # CVE-2024-31083
-Patch1029: 0004-render-fix-refcounting-of-glyphs-during-ProcRenderAd.patch
+Patch10048: 0004-render-fix-refcounting-of-glyphs-during-ProcRenderAd.patch
+Patch10049: 0001-render-Avoid-possible-double-free-in-ProcRenderAddGl.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -606,13 +607,16 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
-* Thu Apr 04 2024 José Expósito <jexposit@redhat.com> - 1.20.4-25
+* Wed Apr 10 2024 José Expósito <jexposit@redhat.com> - 1.20.11-26
+- Fix regression caused by the fix for CVE-2024-31083
+
+* Thu Apr 04 2024 José Expósito <jexposit@redhat.com> - 1.20.11-25
 - CVE fix for: CVE-2024-31080, CVE-2024-31081, CVE-2024-31082 and
   CVE-2024-31083
 - Add util-linux as a dependency of Xvfb
 - Fix compilation error on i686
 
-* Thu Jan 18 2024 José Expósito <jexposit@redhat.com> - 1.20.4-24
+* Thu Jan 18 2024 José Expósito <jexposit@redhat.com> - 1.20.11-24
 - Fix use after free related to CVE-2024-21886
 
 * Tue Jan 16 2024 José Expósito <jexposit@redhat.com> - 1.20.11-23
