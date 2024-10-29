@@ -120,6 +120,7 @@ Patch112: 0001-present-Check-for-NULL-to-prevent-crash.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=2052605
 Patch113: 0001-modesetting-Fix-msSharePixmapBacking-Segfault-Regres.patch
 Patch114: 0001-present-Send-a-PresentConfigureNotify-event-for-dest.patch
+Patch115: 0001-xquartz-Remove-invalid-Unicode-sequence.patch
 
 # CVE-2021-4011
 Patch10009: 0001-record-Fix-out-of-bounds-access-in-SwapCreateRegiste.patch
