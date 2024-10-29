@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   26%{?gitdate:.%{gitdate}}%{?dist}
+Release:   27%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -198,6 +198,8 @@ Patch10047: 0003-Xquartz-ProcAppleDRICreatePixmap-needs-to-use-unswap.patch
 # CVE-2024-31083
 Patch10048: 0004-render-fix-refcounting-of-glyphs-during-ProcRenderAd.patch
 Patch10049: 0001-render-Avoid-possible-double-free-in-ProcRenderAddGl.patch
+# CVE-2024-9632
+Patch10050: 0001-xkb-Fix-buffer-overflow-in-_XkbSetCompatMap.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -608,6 +610,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Oct 29 2024 José Expósito <jexposit@redhat.com> - 1.20.11-27
+- CVE fix for CVE-2024-9632
+- Backport fix for invalid Unicode sequence
+
 * Wed Apr 10 2024 José Expósito <jexposit@redhat.com> - 1.20.11-26
 - Fix regression caused by the fix for CVE-2024-31083
 
