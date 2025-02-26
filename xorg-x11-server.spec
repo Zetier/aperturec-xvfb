@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   27%{?gitdate:.%{gitdate}}%{?dist}
+Release:   28%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -200,6 +200,27 @@ Patch10048: 0004-render-fix-refcounting-of-glyphs-during-ProcRenderAd.patch
 Patch10049: 0001-render-Avoid-possible-double-free-in-ProcRenderAddGl.patch
 # CVE-2024-9632
 Patch10050: 0001-xkb-Fix-buffer-overflow-in-_XkbSetCompatMap.patch
+# CVE-2025-26594: Use-after-free of the root cursor
+Patch10051: 0001-Cursor-Refuse-to-free-the-root-cursor.patch
+Patch10052: 0002-dix-keep-a-ref-to-the-rootCursor.patch
+# CVE-2025-26595: Buffer overflow in XkbVModMaskText()
+Patch10053: 0003-xkb-Fix-buffer-overflow-in-XkbVModMaskText.patch
+# CVE-2025-26596: Heap overflow in XkbWriteKeySyms()
+Patch10054: 0004-xkb-Fix-computation-of-XkbSizeKeySyms.patch
+# CVE-2025-26597: Buffer overflow in XkbChangeTypesOfKey()
+Patch10055: 0005-xkb-Fix-buffer-overflow-in-XkbChangeTypesOfKey.patch
+# CVE-2025-26598: Out-of-bounds write in CreatePointerBarrierClient()
+Patch10056: 0006-Xi-Fix-barrier-device-search.patch
+# CVE-2025-26599: Use of uninitialized pointer in compRedirectWindow()
+Patch10057: 0007-composite-Handle-failure-to-redirect-in-compRedirect.patch
+Patch10058: 0008-composite-initialize-border-clip-even-when-pixmap-al.patch
+# CVE-2025-26600: Use-after-free in PlayReleasedEvents()
+Patch10059: 0009-dix-Dequeue-pending-events-on-frozen-device-on-remov.patch
+# CVE-2025-26601: Use-after-free in SyncInitTrigger()
+Patch10060: 0010-sync-Do-not-let-sync-objects-uninitialized.patch
+Patch10061: 0011-sync-Check-values-before-applying-changes.patch
+Patch10062: 0012-sync-Do-not-fail-SyncAddTriggerToSyncObject.patch
+Patch10063: 0013-sync-Apply-changes-last-in-SyncChangeAlarmAttributes.patch
 
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
@@ -610,6 +631,12 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Wed Feb 26 2025 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-28
+- CVE fix for: CVE-2025-26594 (RHEL-80201), CVE-2025-26595 (RHEL-80186),
+               CVE-2025-26596 (RHEL-80188), CVE-2025-26597 (RHEL-80191),
+               CVE-2025-26598 (RHEL-80192), CVE-2025-26599 (RHEL-80199),
+               CVE-2025-26600 (RHEL-80198), CVE-2025-26601 (RHEL-80200)
+
 * Tue Oct 29 2024 José Expósito <jexposit@redhat.com> - 1.20.11-27
 - CVE fix for CVE-2024-9632
 - Backport fix for invalid Unicode sequence
