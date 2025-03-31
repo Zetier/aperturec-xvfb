@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   29%{?gitdate:.%{gitdate}}%{?dist}
+Release:   30%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -124,6 +124,8 @@ Patch115: 0001-xquartz-Remove-invalid-Unicode-sequence.patch
 # https://issues.redhat.com/browse/RHEL-82085
 # https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/1070
 Patch116: 0001-dix-Force-update-LEDs-after-device-state-update-in-E.patch
+# https://issues.redhat.com/browse/RHEL-84253
+Patch117: 0001-xfree86-Fix-potentially-NULL-reference-to-platform-d.patch
 
 # CVE-2021-4011
 Patch10009: 0001-record-Fix-out-of-bounds-access-in-SwapCreateRegiste.patch
@@ -634,6 +636,10 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Tue Apr 22 2025 Michel Dänzer  <mdaenzer@redhat.com> - 1.20.11-30
+- xfree86: Fix potentially NULL reference to platform device's PCI device
+  Resolves: https://issues.redhat.com/browse/RHEL-84253
+
 * Fri Mar 21 2025 Olivier Fourdan <ofourdan@redhat.com> - 1.20.11-29
 - Fix LEDs state after suspend/resume
   Resolves: https://issues.redhat.com/browse/RHEL-82085
