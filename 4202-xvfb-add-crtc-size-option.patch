@@ -1,0 +1,173 @@
+From 1fb08cea7b1a54747035a3ff0faed7c4d3a80078 Mon Sep 17 00:00:00 2001
+From: Andy Myers <andy.myers@zetier.com>
+Date: Fri, 23 May 2025 15:38:41 -0400
+Subject: [PATCH] xvfb: Add CRTC size option to -crtcs
+
+This change enhances the -crtcs option to accept a size parameter using the
+format N@WxH. The specified size applies to all CRTCs, which can now be
+smaller than the underlying screen dimensions.
+
+Previously, all CRTCs (and the default Mode) matched the screen size.
+
+Signed-off-by: Andy Myers <andy.myers@zetier.com>
+---
+ hw/vfb/InitOutput.c | 88 +++++++++++++++++++++++++++++++--------------
+ hw/vfb/man/Xvfb.man |  8 +++++
+ 2 files changed, 70 insertions(+), 26 deletions(-)
+
+diff --git a/hw/vfb/InitOutput.c b/hw/vfb/InitOutput.c
+index 94a227b400..c6a3879152 100644
+--- a/hw/vfb/InitOutput.c
++++ b/hw/vfb/InitOutput.c
+@@ -152,38 +152,40 @@ static Bool Render = TRUE;
+     else _dst = _src;
+ 
+ static void
+-vfbAddCrtcInfo(vfbScreenInfoPtr screen, int numCrtcs)
++vfbSetCrtcInfo(vfbScreenInfoPtr screen, int numCrtcs, int crtcWidth,
++               int crtcHeight)
+ {
+     int i;
+-    int count = numCrtcs - screen->numCrtcs;
+ 
+-    if (count > 0) {
+-        vfbCrtcInfoPtr crtcs =
+-            reallocarray(screen->crtcs, numCrtcs, sizeof(*crtcs));
+-        if (!crtcs)
+-            FatalError("Not enough memory for %d CRTCs", numCrtcs);
++    vfbCrtcInfoPtr crtcs =
++        reallocarray(screen->crtcs, numCrtcs, sizeof(*crtcs));
++    if (!crtcs)
++        FatalError("Not enough memory for %d CRTCs", numCrtcs);
+ 
+-        memset(crtcs + screen->numCrtcs, 0, count * sizeof(*crtcs));
++    memset(crtcs, 0, numCrtcs * sizeof(*crtcs));
+ 
+-        for (i = screen->numCrtcs; i < numCrtcs; ++i) {
+-            crtcs[i].width = screen->width;
+-            crtcs[i].height = screen->height;
+-        }
+-
+-        screen->crtcs = crtcs;
+-        screen->numCrtcs = numCrtcs;
++    for (i = 0; i < numCrtcs; ++i) {
++        crtcs[i].width = crtcWidth;
++        crtcs[i].height = crtcHeight;
+     }
++
++    /* First CRTC initializes with one output */
++    if (numCrtcs > 0)
++        crtcs[0].numOutputs = 1;
++
++    screen->crtcs = crtcs;
++    screen->numCrtcs = numCrtcs;
+ }
+ 
+ static vfbScreenInfoPtr
+ vfbInitializeScreenInfo(vfbScreenInfoPtr screen)
+ {
+     *screen = defaultScreenInfo;
+-    vfbAddCrtcInfo(screen, VFB_DEFAULT_NUM_CRTCS);
+ 
+-    /* First CRTC initializes with one output */
+-    if (screen->numCrtcs > 0)
+-        screen->crtcs[0].numOutputs = 1;
++    if (screen->numCrtcs == 0) {
++        vfbSetCrtcInfo(screen, VFB_DEFAULT_NUM_CRTCS, screen->width,
++                       screen->height);
++    }
+ 
+     return screen;
+ }
+@@ -313,8 +315,9 @@ ddxUseMsg(void)
+     ErrorF("-shmem                 put framebuffers in shared memory\n");
+ #endif
+ 
+-    ErrorF("-crtcs n               number of CRTCs per screen (default: %d)\n",
+-           VFB_DEFAULT_NUM_CRTCS);
++    ErrorF
++        ("-crtcs n[@WxH]         CRTC count with optional size (default: %d @ screen's WxH)\n",
++         VFB_DEFAULT_NUM_CRTCS);
+ }
+ 
+ int
+@@ -435,11 +438,35 @@ ddxProcessArgument(int argc, char *argv[], int i)
+     }
+ #endif
+ 
+-    if (strcmp(argv[i], "-crtcs") == 0) {       /* -crtcs n */
+-        int numCrtcs;
+-
++    if (strcmp(argv[i], "-crtcs") == 0) {       /* -crtcs N@WxH */
+         CHECK_FOR_REQUIRED_ARGUMENTS(1);
+-        numCrtcs = atoi(argv[i + 1]);
++
++        int numCrtcs = VFB_DEFAULT_NUM_CRTCS;
++        int crtcWidth = currentScreen->width;
++        int crtcHeight = currentScreen->height;
++
++        if (strchr(argv[i + 1], '@')) {
++            if (3 !=
++                sscanf(argv[i + 1], "%d@%dx%d", &numCrtcs, &crtcWidth,
++                       &crtcHeight) || crtcWidth <= 0 || crtcHeight <= 0) {
++                ErrorF("Invalid -crtcs argument '%s'\n", argv[i + 1]);
++                UseMsg();
++                FatalError("Invalid -crtcs argument '%s', expected N@WxH\n",
++                           argv[i + 1]);
++            }
++        }
++        else if (strchr(argv[i + 1], 'x')) {
++            if (2 != sscanf(argv[i + 1], "%dx%d", &crtcWidth, &crtcHeight) ||
++                crtcWidth <= 0 || crtcHeight <= 0) {
++                ErrorF("Invalid -crtcs argument '%s'\n", argv[i + 1]);
++                UseMsg();
++                ErrorF("Invalid -crtcs argument '%s', expected WxH\n",
++                       argv[i + 1]);
++            }
++        }
++        else {
++            numCrtcs = atoi(argv[i + 1]);
++        }
+ 
+         if (numCrtcs < 1) {
+             ErrorF("Invalid number of CRTCs %d\n", numCrtcs);
+@@ -449,7 +476,16 @@ ddxProcessArgument(int argc, char *argv[], int i)
+ 
+         }
+ 
+-        vfbAddCrtcInfo(currentScreen, numCrtcs);
++        if (crtcWidth > currentScreen->width ||
++            crtcHeight > currentScreen->height) {
++            ErrorF("CRTC size cannot exceed screen size\n");
++            UseMsg();
++            FatalError("CRTC size %dx%d exceeds screen size %dx%d\n",
++                       crtcWidth, crtcHeight,
++                       currentScreen->width, currentScreen->height);
++        }
++
++        vfbSetCrtcInfo(currentScreen, numCrtcs, crtcWidth, crtcHeight);
+         return 2;
+     }
+ 
+diff --git a/hw/vfb/man/Xvfb.man b/hw/vfb/man/Xvfb.man
+index 82bb8137eb..db09f1c179 100644
+--- a/hw/vfb/man/Xvfb.man
++++ b/hw/vfb/man/Xvfb.man
+@@ -91,6 +91,14 @@ possible with the fb code.
+ .TP 4
+ .B "\-blackpixel \fIpixel-value\fP, \-whitepixel \fIpixel-value\fP"
+ These options specify the black and white pixel values the server should use.
++.TP 4
++.B -crtcs\fP \fIn\fP[\fB@\fIW\fP\fBx\fP\fIH\fP]
++Sets the number of screen CRTCs available to \fIn\fP, and optionally specifies
++their width (\fIW\fP) and height (\fIH\fP).  If only \fIn\fP is provided, each
++CRTC uses the full screen size.  If \fB\-crtcs\fP is not specified, the default
++is one CRTC matching the current screen's dimensions.  Unless overridden by
++\fB\-screen\fP, this is equivalent to \fB1@1280x1024\fP.  In any case, only one
++CRTC will have a Mode set at startup.
+ .SH FILES
+ The following files are created if the \-fbdir option is given.
+ .TP 4
+-- 
+GitLab
+

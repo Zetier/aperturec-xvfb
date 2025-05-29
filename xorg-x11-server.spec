@@ -42,7 +42,7 @@
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
 Version:   1.20.11
-Release:   30%{?gitdate:.%{gitdate}}%{?dist}
+Release:   4200%{?gitdate:.%{gitdate}}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 
@@ -227,6 +227,10 @@ Patch10061: 0011-sync-Check-values-before-applying-changes.patch
 Patch10062: 0012-sync-Do-not-fail-SyncAddTriggerToSyncObject.patch
 Patch10063: 0013-sync-Apply-changes-last-in-SyncChangeAlarmAttributes.patch
 
+# ApertureC
+Patch42000: 4200-xvfb-add-multiple-crtc-support.patch
+Patch42002: 4202-xvfb-add-crtc-size-option.patch
+
 BuildRequires: make
 BuildRequires: systemtap-sdt-devel
 BuildRequires: git-core
@@ -241,10 +245,6 @@ BuildRequires: libXfont2-devel libXau-devel libxkbfile-devel libXres-devel
 BuildRequires: libfontenc-devel libXtst-devel libXdmcp-devel
 BuildRequires: libX11-devel libXext-devel
 BuildRequires: libXinerama-devel libXi-devel
-
-# DMX config utils buildreqs.
-BuildRequires: libXt-devel libdmx-devel libXmu-devel libXrender-devel
-BuildRequires: libXi-devel libXpm-devel libXaw-devel libXfixes-devel
 
 BuildRequires: pkgconfig(epoxy)
 BuildRequires: pkgconfig(xshmfence) >= 1.1
@@ -331,22 +331,6 @@ X application.  It runs in a window just like other X applications,
 but it is an X server itself in which you can run other software.  It
 is a very useful tool for developers who wish to test their
 applications without running them on their real X server.
-
-
-%package Xdmx
-Summary: Distributed Multihead X Server and utilities
-Requires: xorg-x11-server-common >= %{version}-%{release}
-Provides: Xdmx
-
-%description Xdmx
-Xdmx is proxy X server that provides multi-head support for multiple displays
-attached to different machines (each of which is running a typical X server).
-When Xinerama is used with Xdmx, the multiple displays on multiple machines
-are presented to the user as a single unified screen.  A simple application
-for Xdmx would be to provide multi-head support using two desktop machines,
-each of which has a single display device attached to it.  A complex
-application for Xdmx would be to unify a 4 by 4 grid of 1280x1024 displays
-(each attached to one of 16 computers) into a unified 5120x4096 display.
 
 
 %package Xvfb
@@ -475,7 +459,7 @@ autoreconf -f -v --install || exit 1
         --enable-xcsecurity \
 	--enable-config-udev \
 	--disable-unit-tests \
-	--enable-dmx \
+	--disable-dmx \
 	--disable-xwayland \
 	%{dri_flags} \
 	${CONFIGURE}
@@ -594,24 +578,6 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 %files Xnest
 %{_bindir}/Xnest
 %{_mandir}/man1/Xnest.1*
-
-%files Xdmx
-%{_bindir}/Xdmx
-%{_bindir}/dmxaddinput
-%{_bindir}/dmxaddscreen
-%{_bindir}/dmxreconfig
-%{_bindir}/dmxresize
-%{_bindir}/dmxrminput
-%{_bindir}/dmxrmscreen
-%{_bindir}/dmxtodmx
-%{_bindir}/dmxwininfo
-%{_bindir}/vdltodmx
-%{_bindir}/dmxinfo
-%{_bindir}/xdmxconfig
-%{_mandir}/man1/Xdmx.1*
-%{_mandir}/man1/dmxtodmx.1*
-%{_mandir}/man1/vdltodmx.1*
-%{_mandir}/man1/xdmxconfig.1*
 
 %files Xvfb
 %{_bindir}/Xvfb
